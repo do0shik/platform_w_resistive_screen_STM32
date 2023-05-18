@@ -1,18 +1,19 @@
 #include <servo.h>
+#include <math.h>
+#include <uart_lld.h>
 
-#define ADC_RESOLUTION 4095 // Разрешение АЦП в битах
-#define ADC_MAX_Y 3000
-#define ADC_MIN_Y 1100
-#define ADC_MAX_X 3300
-#define ADC_MIN_X 1500
-#define VOLTAGE_REFERENCE 3.3 // Опорное напряжение АЦП, В
-#define ANGLE_RANGE 270 // Диапазон углов
+static bool flagA1 = false;
+static bool flagB1 = false;
+static bool flagA2 = false;
+static bool flagB2 = false;
+
+extern adcsample_t adcservobuf[2];
 
 ADCConversionGroup adcconf2 = {
 
    .circular = FALSE,
    .num_channels = 2,
-   .end_cb = NULL,
+   .end_cb = ADC_conversion_end_cb,
    .error_cb = NULL,
    .cr1 = 0,
    .cr2 = 0,
@@ -23,7 +24,9 @@ ADCConversionGroup adcconf2 = {
    .sqr3 = ADC_SQR3_SQ1_N(ADC_CHANNEL_IN5) | ADC_SQR3_SQ2_N(ADC_CHANNEL_IN4)
 };
 
+
 void motor_location_init(void){
+
  adcStart(&ADCD1, NULL);
 }
 
@@ -32,9 +35,10 @@ void motor_location_read (adcsample_t  *adcservobuf) {
  adcConvert(&ADCD1, &adcconf2, adcservobuf, 1);
 }
 
+
 // Функция преобразования значения АЦП в угол
-void ADC_to_angle_transform(uint16_t *adcservobuf, adc_t *str)
-{
+void ADC_to_angle_transform(uint16_t *adcservobuf, adc_t *str){
+
   str->ADC_ANGLE_X=adcservobuf[0];
   str->ADC_ANGLE_Y=adcservobuf[1];
 
@@ -43,5 +47,84 @@ void ADC_to_angle_transform(uint16_t *adcservobuf, adc_t *str)
 
   str-> ADC_ANGLE_X=(voltage_X/ VOLTAGE_REFERENCE) * ANGLE_RANGE;
   str-> ADC_ANGLE_Y=(voltage_Y/ VOLTAGE_REFERENCE) * ANGLE_RANGE;
-
 }
+
+
+
+
+void ADC_conversion_end_cb(ADCDriver* adcp) {
+
+  (void)adcp;
+  if (adcservobuf[0] < ADC_MIN_X){
+    flagA1 = true;
+    disable_motors_A();
+  }
+  else {
+    flagA1 = false;
+  }
+  if (adcservobuf[0] >= ADC_MAX_X){
+    flagA2 = true;
+    disable_motors_A();
+    }
+  else {
+    flagA2 = false;
+  }
+
+  if (adcservobuf[1] < ADC_MIN_Y){
+    flagB1 = true;
+    disable_motors_B();
+  }
+  else{
+    flagB1 = false;
+  }
+  if (adcservobuf[1] >= ADC_MAX_Y){
+    flagB2 = true;
+    disable_motors_B();
+  }
+  else{
+    flagB2 = false;
+  }
+}
+
+bool get_flag_dirA1(void){
+  return flagA1;
+}
+
+bool get_flag_dirA2(void){
+  return flagA2;
+}
+
+bool get_flag_dirB1(void){
+  return flagB1;
+}
+
+bool get_flag_dirB2(void){
+  return flagB2;
+}
+
+void processing_flags(bool flagA1, bool flagA2, bool flagB1, bool flagB2){
+
+  if (flagA1 == true){
+    disable_motors_A();
+    dbgprintf("\n\rSTOP\n\r \n\r");
+
+  }
+  if (flagA2 == true){
+    disable_motors_A();
+    dbgprintf("\n\rSTOP\n\r \n\r");
+
+  }
+  if (flagB1 == true){
+    disable_motors_B();
+    dbgprintf("\n\rSTOP\n\r \n\r");
+
+  }
+  if (flagB2 == true){
+    disable_motors_B();
+    dbgprintf("\n\rSTOP\n\r \n\r");
+
+  }
+}
+
+
+
