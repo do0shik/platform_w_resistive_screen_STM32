@@ -43,6 +43,11 @@ bool get_flag_dirA1(void);
 bool get_flag_dirA2(void);
 bool get_flag_dirB1(void);
 bool get_flag_dirB2(void);
+void set_flag_dirA1(bool f_A1);
+void set_flag_dirA2(bool f_A2);
+void set_flag_dirB1(bool f_B1);
+void set_flag_dirB2(bool f_B2);
+
 void processing_flags(bool flagA1, bool flagA2, bool flagB1, bool flagB2);
 
 

@@ -9,8 +9,8 @@
 
 #define CENTER_X 0.4  // Центральная координата по оси X на резистивном экране
 #define CENTER_Y 0.56 // Центральная координата по оси Y на резистивном экране
-#define kP 0.5  // Коэффициент пропорциональной составляющей
-#define kI 0.3  // Коэффициент интегральной составляющей
+#define kP 100  // Коэффициент пропорциональной составляющей
+#define kI 0  // Коэффициент интегральной составляющей
 
 void screenControl(circular_t* circular, coordinates_t* current_coordinates);
 float csX(void);

@@ -8,7 +8,6 @@
 #include <string.h>
 #include <dependenceXY_angle.h>
 
-
 uint16_t servo_num = 1;
 uint16_t angle = 0;
 static uint16_t adcbuf[2] = {0};
@@ -25,12 +24,11 @@ int main(void) {
   debug_stream_init();
   dbgprintf("start\n\r");
 
-
   circular_t circular = {
-                         .X = {0},
-                         .Y = {0},
-                         .start = -1,
-                         .current = 0,
+    .X = {0},
+    .Y = {0},
+    .start = -1,
+    .current = 0,
   };
 
   coordinates_t p = {
@@ -54,19 +52,18 @@ int main(void) {
   pwm_motors_ChangeWidth_A(1000);
   pwm_motors_ChangeWidth_B(1000);
 
-
   while(1)
   {
-
-    processing_flags(get_flag_dirA1(), get_flag_dirA2(),
-                         get_flag_dirB1(), get_flag_dirB2());
+    processing_flags(get_flag_dirA1(),
+                     get_flag_dirA2(),
+                     get_flag_dirB1(),
+                     get_flag_dirB2());
     screenControl(&circular, &coord);
 
-
-//   //Положение мотора XY
+   /* Положение мотора XY*/
     motor_location_read(&adcservobuf[0]);
-//    dbgprintf("angleX - %.3f angleY - %.3f\n\r",
-//              d.ADC_ANGLE_X, d.ADC_ANGLE_Y);
+    dbgprintf("angleX - %.3f angleY - %.3f\n\r",
+              d.ADC_ANGLE_X, d.ADC_ANGLE_Y);
     dbgprintf("angle1 - %d angle2 - %d \n\r",
               adcservobuf[0], adcservobuf[1]);
 
@@ -75,7 +72,7 @@ int main(void) {
               get_flag_dirA1(), get_flag_dirA2(),
               get_flag_dirB1(), get_flag_dirB2());
 
-    //Ось X
+    /*Ось X*/
     X_axis();
     palSetLineMode( PAL_LINE(GPIOA, 0), PAL_MODE_INPUT_ANALOG);
     chThdSleepMilliseconds(3);
@@ -83,7 +80,7 @@ int main(void) {
     dbgprintf("coord_X - %.3f ", p.X);
     chThdSleepMilliseconds(300);
 
-    //Ось Y
+    /*Ось Y*/
     Y_axis();
     palSetLineMode( PAL_LINE(GPIOA, 0), PAL_MODE_INPUT_ANALOG);
     chThdSleepMilliseconds(3);
@@ -92,19 +89,17 @@ int main(void) {
     chThdSleepMilliseconds(300);
 
     XY_transform(adcbuf, &p);
-
     putElement(&circular, &p);
 
     int current = circular.current - 1;
     if (current == -1){
       current = 0;
     }
-
     dbgprintf("Array[%d]: X=%.3f, Y=%.3f\n\r\n\r",
               circular.current,
               circular.X[current], circular.Y[current]);
-    ADC_to_angle_transform(adcservobuf, &d);
 
+    ADC_to_angle_transform(adcservobuf, &d);
   }
 }
 
