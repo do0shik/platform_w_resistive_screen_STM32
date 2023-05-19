@@ -13,16 +13,15 @@
 //#define ADC_MAX_X 2500
 //#define ADC_MIN_X 1000
 
-#define ADC_MAX_Y 2400
-#define ADC_MIN_Y 1880
+#define ADC_MAX_X 2200
+#define ADC_MIN_X 1380
 
-#define ADC_MAX_X 1850
-#define ADC_MIN_X 1450
+#define ADC_MAX_Y 2850
+#define ADC_MIN_Y 1750
 
 #define VOLTAGE_REFERENCE 3.3 // Опорное напряжение АЦП, В
 #define ANGLE_RANGE 270 // Диапазон углов
-#define ANGLE_UP 20
-#define ANGLE_DOWN -20
+
 
 extern float start_angle_X;
 extern float start_angle_Y;

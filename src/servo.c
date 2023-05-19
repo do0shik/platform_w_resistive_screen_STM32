@@ -50,29 +50,26 @@ void ADC_conversion_end_cb(ADCDriver* adcp) {
   // Проверка границ по X
   if (adcservobuf[0] < ADC_MIN_X){
     flagA1 = true;
-    disable_motors_A();
   }
   else {
     flagA1 = false;
   }
   if (adcservobuf[0] >= ADC_MAX_X){
     flagA2 = true;
-    disable_motors_A();
     }
   else {
     flagA2 = false;
   }
+
   // Проверка границ по Y
   if (adcservobuf[1] < ADC_MIN_Y){
     flagB1 = true;
-    disable_motors_B();
   }
   else{
     flagB1 = false;
   }
   if (adcservobuf[1] >= ADC_MAX_Y){
     flagB2 = true;
-    disable_motors_B();
   }
   else{
     flagB2 = false;
@@ -112,19 +109,19 @@ void set_flag_dirB2(bool f_B2){
 void processing_flags(bool flagA1, bool flagA2, bool flagB1, bool flagB2){
   if (flagA1 == true){
     disable_motors_A();
-    dbgprintf("\n\rSTOP\n\r \n\r");
+    chThdSleepMilliseconds(100);
   }
   if (flagA2 == true){
     disable_motors_A();
-    dbgprintf("\n\rSTOP\n\r \n\r");
+    chThdSleepMilliseconds(100);
   }
   if (flagB1 == true){
     disable_motors_B();
-    dbgprintf("\n\rSTOP\n\r \n\r");
+    chThdSleepMilliseconds(100);
   }
   if (flagB2 == true){
     disable_motors_B();
-    dbgprintf("\n\rSTOP\n\r \n\r");
+    chThdSleepMilliseconds(100);
   }
 }
 

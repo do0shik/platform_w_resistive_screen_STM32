@@ -7,6 +7,7 @@ PROJECT_CSRC 	= main.c \
  				 src/coord_transform.c \
  				 src/motor_control.c \
  				 src/dependeceXY_angle.c \
+ 				 src/control_thd.c \
 
 # C++ source files
 PROJECT_CPPSRC 	= 

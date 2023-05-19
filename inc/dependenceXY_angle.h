@@ -12,6 +12,7 @@
 #define kP 100  // Коэффициент пропорциональной составляющей
 #define kI 0  // Коэффициент интегральной составляющей
 
+
 void screenControl(circular_t* circular, coordinates_t* current_coordinates);
 float csX(void);
 float csY(void);
